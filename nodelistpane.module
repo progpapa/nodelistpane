@@ -1,0 +1,37 @@
+<?php
+/**
+ * @file
+ * Main file for the nodelistpane module.
+ */
+
+define('NODELISTPANE_NODE_LIMIT', 10);
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ */
+function nodelistpane_ctools_plugin_directory($owner, $plugin_type) {
+  if ($owner == 'ctools' && !empty($plugin_type)) {
+    return "plugins/$plugin_type";
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function nodelistpane_theme($existing, $type, $theme, $path) {
+  return array(
+    'nodelistpane_select_form' => array(
+      'render element' => 'form',
+    ),
+  );
+}
+
+/**
+ * Implements hook_entity_info_alter().
+ */
+function nodelistpane_entity_info_alter(&$info) {
+  $info['node']['view modes']['nodelistpane'] = array(
+    'label' => t('Node List Pane'),
+    'custom settings' => TRUE,
+  );
+}

@@ -1,0 +1,8 @@
+name = Node List Pane
+description = Allows the creation of panes displaying ordered lists of nodes.
+package = custom
+core = 7.x
+
+dependencies[] = ctools
+dependencies[] = page_manager
+dependencies[] = panels
