@@ -14,7 +14,9 @@ $plugin = array(
   ),
   'render callback' => 'nodelistpane_render',
   'admin info' => 'nodelistpane_admin_info',
-  'defaults' => array(),
+  'defaults' => array(
+    'read_more' => TRUE,
+  ),
   'all contexts' => TRUE,
 );
 
@@ -54,6 +56,14 @@ function nodelistpane_configure_form($form, &$form_state) {
     '#default_value' => isset($conf['build_mode']) ? $conf['build_mode'] : 'nodelistpane',
   );
 
+  $form['read_more'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Read more link'),
+    '#description' => t('Check to display a read more link.'),
+    '#default_value' => !empty($conf['read_more']),
+//    '#default_value' => isset($conf['read_more']) ? $conf['read_more'] : FALSE,
+  );
+
   return $form;
 }
 
@@ -61,7 +71,7 @@ function nodelistpane_configure_form($form, &$form_state) {
  * Configuration form submit function.
  */
 function nodelistpane_configure_form_submit($form, &$form_state) {
-  foreach (array('limit', 'build_mode', 'admin_title') as $key) {
+  foreach (array('limit', 'build_mode', 'admin_title', 'read_more') as $key) {
     $form_state['conf'][$key] = $form_state['values'][$key];
   }
 }
@@ -149,6 +159,23 @@ function nodelistpane_render($subtype, $conf, $args, $contexts) {
   $nids = element_children($render_array['nodes']);
   $item_list = array();
   foreach ($nids as $nid) {
+    // Optionally display a read more link.
+    // @todo: move this to a custom module...
+    if (!empty($conf['read_more'])) {
+      $render_array['nodes'][$nid]['readmore'] = array(
+        '#theme' => 'link',
+        '#text' => t('Read more'),
+        '#path' => 'node/' . $nid,
+        '#options' => array(
+          'attributes' => array(
+            'rel' => 'tag',
+            'class' => 'read-more-link',
+          ),
+          'html' => FALSE,
+        ),
+        '#weight' => 100,
+      );
+    }
     $item_list[] = drupal_render($render_array['nodes'][$nid]);
   }
   $block->content = array(
