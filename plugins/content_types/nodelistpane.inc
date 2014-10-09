@@ -15,6 +15,9 @@ $plugin = array(
   'render callback' => 'nodelistpane_render',
   'admin info' => 'nodelistpane_admin_info',
   'defaults' => array(
+    'admin_title' => '',
+    'limit' => 4,
+    'build_mode' => 'nodelistpane',
     'read_more' => TRUE,
   ),
   'all contexts' => TRUE,
@@ -28,7 +31,7 @@ function nodelistpane_configure_form($form, &$form_state) {
 
   $form['admin_title'] = array(
     '#type' => 'textfield',
-    '#default_value' => isset($conf['admin_title']) ? $conf['admin_title'] : '',
+    '#default_value' => $conf['admin_title'],
     '#title' => t('Administrative title'),
     '#description' => t('This title will be used administratively to identify this pane. If blank, the regular title will be used.'),
   );
@@ -38,7 +41,7 @@ function nodelistpane_configure_form($form, &$form_state) {
     '#options' => drupal_map_assoc(range(1, NODELISTPANE_NODE_LIMIT)),
     '#title' => t('Number of nodes'),
     '#description' => t('Select the number of nodes to show in this list.'),
-    '#default_value' => isset($conf['limit']) ? $conf['limit'] : 1,
+    '#default_value' => $conf['limit'],
   );
 
   $entity_info = entity_get_info('node');
@@ -53,7 +56,7 @@ function nodelistpane_configure_form($form, &$form_state) {
     '#options' => $options,
     '#title' => t('Build mode'),
     '#description' => t('Select a build mode for this node.'),
-    '#default_value' => isset($conf['build_mode']) ? $conf['build_mode'] : 'nodelistpane',
+    '#default_value' => $conf['build_mode'],
   );
 
   $form['read_more'] = array(
@@ -61,7 +64,6 @@ function nodelistpane_configure_form($form, &$form_state) {
     '#title' => t('Read more link'),
     '#description' => t('Check to display a read more link.'),
     '#default_value' => !empty($conf['read_more']),
-//    '#default_value' => isset($conf['read_more']) ? $conf['read_more'] : FALSE,
   );
 
   return $form;
